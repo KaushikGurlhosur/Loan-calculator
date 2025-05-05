@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 
 import { CssBaseline, Container } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
 
 function App() {
   const { darkMode, toggleTheme } = useTheme();
@@ -13,7 +14,7 @@ function App() {
       <Navbar darkMode={darkMode} toggleDarkMode={toggleTheme} />
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Routes>
-          <Route path="/" />
+          <Route path="/" element={<Home />} />
           <Route path="/exchange-rates" />
         </Routes>
       </Container>
