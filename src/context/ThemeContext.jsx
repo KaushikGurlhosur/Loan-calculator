@@ -9,12 +9,6 @@ export const ThemeContextProvider = ({ children }) => {
   const theme = createTheme({
     palette: {
       mode: darkMode ? "dark" : "light",
-      primary: {
-        main: darkMode ? "#90caf9" : "#1976d2",
-      },
-      secondary: {
-        main: darkMode ? "#f48fb1" : "#dc004e",
-      },
     },
   });
 

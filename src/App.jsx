@@ -5,6 +5,7 @@ import { CssBaseline, Container } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import ExchangeRates from "./pages/ExchangeRates";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   const { darkMode, toggleTheme } = useTheme();
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/exchange-rates" element={<ExchangeRates />} />
+          <Route path="/error_page" element={<ErrorPage />} />
         </Routes>
       </Container>
     </>

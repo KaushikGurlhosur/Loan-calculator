@@ -55,6 +55,11 @@ const Home = () => {
     setFullSchedule(newSchedule);
   };
 
+  const resetTable = () => {
+    setEmi(0);
+    setFullSchedule([]);
+  };
+
   return (
     <Box sx={{ maxWidth: 1500, mx: "auto", p: 2, mt: 3 }}>
       <Typography variant="h4" component="h1" gutterBottom sx={{ mb: 3 }}>
@@ -117,9 +122,18 @@ const Home = () => {
 
         {emi > 0 && (
           <Box sx={{ mt: 4 }}>
-            <Typography variant="h6" gutterBottom>
-              Monthly EMI: ${emi}
-            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography variant="h6" gutterBottom>
+                Monthly EMI: ${emi}
+              </Typography>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={resetTable}
+                sx={{ height: "56px" }}>
+                Reset Table
+              </Button>
+            </Box>
 
             <FormControl variant="outlined" sx={{ mb: 3, minWidth: 120 }}>
               <Select

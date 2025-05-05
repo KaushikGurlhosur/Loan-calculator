@@ -28,6 +28,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Exchange Rates (Live)", path: "/exchange-rates" },
+    { name: "Error Page", path: "/error_page" },
   ];
 
   const handleDrawerToggle = () => {
@@ -91,9 +92,9 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center", ml: 2 }}>
-            <IconButton color="inherit" onClick={toggleDarkMode}>
+            {/* <IconButton color="inherit" onClick={toggleDarkMode}>
               {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
+            </IconButton> */}
             <Switch
               checked={darkMode}
               onChange={toggleDarkMode}
