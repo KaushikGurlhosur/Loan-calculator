@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -21,70 +20,25 @@ import {
   Chip,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import axios from "axios";
+
+import useExchangeRates from "../hooks/useExchangeRates";
 
 const ExchangeRates = () => {
-  const [baseCurrency, setBaseCurrency] = useState("USD");
-  const [allRates, setAllRates] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
-  const [itemsPerPage] = useState(10);
-  const [totalItems, setTotalItems] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
+  const {
+    baseCurrency,
+    loading,
+    error,
+    page,
+    itemsPerPage,
+    searchTerm,
+    displayedRates,
+    totalItems,
+    handleBaseCurrencyChange,
+    handleSearchTermChange,
+    setPage,
+  } = useExchangeRates();
 
-  const fetchExchangeRates = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const apiKey = import.meta.env.VITE_EXCHANGE_RATE_API_KEY;
-      const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`;
-
-      const response = await axios.get(apiUrl);
-
-      if (response.data.result === "success") {
-        setAllRates(response.data.conversion_rates);
-        setTotalItems(Object.keys(response.data.conversion_rates).length);
-      } else {
-        throw new Error(`API Error: ${response.data["error-type"]}`);
-      }
-    } catch (err) {
-      console.error("Error fetching exchange rates:", err);
-      setError(
-        `Failed to fetch exchange rates. ${
-          err.response?.data?.["error-type"]
-            ? `Error Type: ${err.response.data["error-type"]}`
-            : err.message
-            ? err.message
-            : "Please try again later."
-        }`
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchExchangeRates();
-  }, [baseCurrency]);
-
-  const handleBaseCurrencyChange = (event) => {
-    setBaseCurrency(event.target.value);
-    setPage(1);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const filteredRates = Object.entries(allRates).filter(([currency]) =>
-    currency.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const startIndex = (page - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const displayedRates = filteredRates.slice(startIndex, endIndex);
+  const currencies = ["USD", "EUR", "GBP", "INR", "JPY", "AUD", "CAD"];
 
   return (
     <Box sx={{ maxWidth: 800, mx: "auto", p: 2, mt: 3 }}>
@@ -114,7 +68,7 @@ const ExchangeRates = () => {
           <Select
             value={baseCurrency}
             id="base-currency"
-            onChange={handleBaseCurrencyChange}
+            onChange={(e) => handleBaseCurrencyChange(e.target.value)}
             inputProps={{ "aria-label": "Currency" }}
             sx={{
               "& .MuiOutlinedInput-notchedOutline": {
@@ -128,13 +82,11 @@ const ExchangeRates = () => {
                 borderWidth: "2px",
               },
             }}>
-            <MenuItem value="USD">USD</MenuItem>
-            <MenuItem value="EUR">EUR</MenuItem>
-            <MenuItem value="GBP">GBP</MenuItem>
-            <MenuItem value="INR">INR</MenuItem>
-            <MenuItem value="INR">JPY</MenuItem>
-            <MenuItem value="INR">AUD</MenuItem>
-            <MenuItem value="INR">CAD</MenuItem>
+            {currencies.map((currency) => (
+              <MenuItem key={currency} value={currency}>
+                {currency}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </Box>
@@ -145,8 +97,7 @@ const ExchangeRates = () => {
           size="small"
           value={searchTerm}
           onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
+            handleSearchTermChange(e.target.value);
           }}
           InputProps={{
             startAdornment: (
@@ -171,7 +122,7 @@ const ExchangeRates = () => {
         </Alert>
       )}
 
-      {!loading && !error && Object.keys(allRates).length > 0 && (
+      {!loading && !error && displayedRates.length > 0 && (
         <Paper elevation={3} sx={{ mt: 3 }}>
           <TableContainer>
             <Table>
@@ -217,13 +168,12 @@ const ExchangeRates = () => {
               p: 2,
             }}>
             <Typography variant="body2" color="text.secondary">
-              Showing {displayedRates.length} of {filteredRates.length}{" "}
-              currencies
+              Showing {displayedRates.length} of {totalItems} currencies
             </Typography>
             <Pagination
-              count={Math.ceil(filteredRates.length / itemsPerPage)}
+              count={Math.ceil(totalItems / itemsPerPage)}
               page={page}
-              onChange={handleChangePage}
+              onChange={(e, newPage) => setPage(newPage)}
               color="primary"
             />
           </Box>

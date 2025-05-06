@@ -6,6 +6,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import ExchangeRates from "./pages/ExchangeRates";
 import ErrorPage from "./pages/ErrorPage";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const { darkMode, toggleTheme } = useTheme();
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/exchange-rates" element={<ExchangeRates />} />
           <Route path="/error_page" element={<ErrorPage />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Container>
     </>
